@@ -25,13 +25,24 @@ export class World {
 
 
 
-    exportCells() {
-        let cellsString = "";
+    /**
+     * Get an empire by its ID
+     * @param {string} id ID of the empire
+     * @returns {Empire|null} The empire or null if not found
+     */
+    getEmpire(id) {
+        return this.empires.find(e => e.id === id) || null;
+    }
 
-        for (let cell of this.cells) {
-            cellsString += `:${cell.export()}`
-        }
 
-        return cellsString;
+
+    /**
+     * Get a cell by its coordinates
+     * @param {number} x X coordinate of the cell
+     * @param {number} y Y coordinate of the cell
+     * @returns {Cell|null} The cell or null if not found
+     */
+    getCell(x, y) {
+        return this.cells.find(c => c.x === x && c.y === y) || null;
     }
 }

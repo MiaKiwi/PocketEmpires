@@ -20,6 +20,7 @@ export class FadingLayeredPerlinGenerator extends Generator {
     }) {
         noise.seed(seed);
 
+        let world = new World([]);
         let cells = [];
 
         for (let x = 0; x < width; x++) {
@@ -44,10 +45,12 @@ export class FadingLayeredPerlinGenerator extends Generator {
                     type = CellType.MOUNTAIN
                 }
 
-                cells.push(new Cell(x, y, type));
+                cells.push(new Cell(x, y, type, world));
             }
         }
 
-        return new World(cells);
+        world.cells = cells;
+
+        return world;
     }
 }
