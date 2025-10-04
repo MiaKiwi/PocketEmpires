@@ -37,6 +37,37 @@ export class World {
 
 
     /**
+     * Create a new empire in the world
+     * @param {string} id ID of the new empire
+     * @param {string} color HEX color of the new empire
+     * @param {Cell[]} startingCells Starting cells of the new empire
+     * @param {number} maxSize Max size of the new empire
+     */
+    newEmpire(id, color, startingCells, maxSize = 100) {
+        let empire = new Empire(id, this, color, maxSize);
+
+        this.addEmpire(empire);
+
+        for (let cell of startingCells) {
+            empire.colonize(cell);
+        }
+    }
+
+
+
+    /**
+     * Add an empire to the world
+     * @param {Empire} empire 
+     */
+    addEmpire(empire) {
+        if (!this.getEmpire(empire.id)) {
+            this.empires.push(empire)
+        }
+    }
+
+
+
+    /**
      * Get a cell by its coordinates
      * @param {number} x X coordinate of the cell
      * @param {number} y Y coordinate of the cell
@@ -44,5 +75,26 @@ export class World {
      */
     getCell(x, y) {
         return this.cells.find(c => c.x === x && c.y === y) || null;
+    }
+
+
+
+    /**
+     * Add a cell to the world
+     * @param {Cell} cell 
+     */
+    addCell(cell) {
+        if (!this.getCell(cell.x, cell.y)) {
+            this.cells.push(cell)
+        }
+    }
+
+
+
+    step() {
+        // Step all empires
+        for (let empire of this.empires) {
+            empire.step();
+        }
     }
 }

@@ -1,3 +1,4 @@
+import { blendHexColors } from "./blendColors.mjs";
 import { CellType } from "./cellType.mjs";
 import { Empire } from "./empire.mjs";
 import { World } from "./world.mjs";
@@ -21,6 +22,11 @@ export class Cell {
         this.empire = empire;
         this.morale = morale;
         this.loyalty = loyalty;
+
+        // Add the cell to the world if it isn't already in it
+        if (!this.world.getCell(this.x, this.y)) {
+            this.world.addCell(this)
+        }
     }
 
 
@@ -30,60 +36,86 @@ export class Cell {
      * @returns {string} Hexadecimal color string
      */
     get colorHex() {
+        let col = "#ff00ffff";
+
         switch (this.type) {
             case CellType.PLAINS:
-                return "#21c400ff";
+                col = "#21c400ff";
+                break;
 
             case CellType.FOREST:
-                return "#137000ff";
+                col = "#137000ff";
+                break;
 
             case CellType.MOUNTAIN:
-                return "#9c9c9cff";
+                col = "#9c9c9cff";
+                break;
 
             case CellType.SNOWY_MOUNTAIN:
-                return "#f3f3f3ff";
+                col = "#f3f3f3ff";
+                break;
 
             case CellType.SHALLOW_WATER:
-                return "#3db8ffff";
+                col = "#3db8ffff";
+                break;
 
             case CellType.DEEP_WATER:
-                return "#007bc2ff";
+                col = "#007bc2ff";
+                break;
 
             case CellType.DESERT:
-                return "#e4da59ff";
+                col = "#e4da59ff";
+                break;
 
             case CellType.DBG_BLUE:
-                return "#0000ffff";
+                col = "#0000ffff";
+                break;
 
             case CellType.DBG_RED:
-                return "#ff0000ff";
+                col = "#ff0000ff";
+                break;
 
             case CellType.DBG_GREEN:
-                return "#00ff00ff";
+                col = "#00ff00ff";
+                break;
 
             case CellType.DBG_MAGENTA:
-                return "#a700a7ff";
+                col = "#a700a7ff";
+                break;
 
             case CellType.DBG_YELLOW:
-                return "#ffff00ff";
+                col = "#ffff00ff";
+                break;
 
             case CellType.DBG_ORANGE:
-                return "#ff9900ff";
+                col = "#ff9900ff";
+                break;
 
             case CellType.DBG_PINK:
-                return "#ff00ffff";
+                col = "#ff00ffff";
+                break;
 
             case CellType.DBG_CYAN:
-                return "#18c9ffff";
+                col = "#18c9ffff";
+                break;
 
             case CellType.DBG_BROWN:
-                return "#7a4900ff";
-
-
+                col = "#7a4900ff";
+                break;
 
             default:
-                return "#000000ff"; // Default to black if type is unknown
+                col = "#e60000ff"; // Default to dark red if type is unknown
+                break;
         }
+
+        // If the cell is occupied, blend its color and empire's
+        if (this.empire !== null) {
+            let empireColor = this.empire.color;
+
+            col = blendHexColors(col, empireColor, 0.5) + "ff";
+        }
+
+        return col;
     }
 
 
@@ -187,5 +219,60 @@ export class Cell {
             this.getBottomNeighbor(),
             this.getBottomRightNeighbor()
         ];
+    }
+
+
+
+    /**
+     * Get all non-null neighboring cells
+     * @returns {Cell[]}
+     */
+    getNonNullNeighbors() {
+        let neighbors = this.getNeighbors();
+
+        return neighbors.filter(n => n !== null);
+    }
+
+
+
+
+    /**
+     * Get cost to go through the cell
+     * @returns {number}
+     */
+    getTraversalCost() {
+        let cost = 1; // Default cost is 1
+
+        switch (this.type) {
+            case CellType.PLAINS:
+                cost = 1;
+                break;
+
+            case CellType.FOREST:
+                cost = 1;
+                break;
+
+            case CellType.MOUNTAIN:
+                cost = 3;
+                break;
+
+            case CellType.SNOWY_MOUNTAIN:
+                cost = 4;
+                break;
+
+            case CellType.SHALLOW_WATER:
+                cost = 3;
+                break;
+
+            case CellType.DEEP_WATER:
+                cost = 4;
+                break;
+
+            case CellType.DESERT:
+                cost = 6;
+                break;
+        }
+
+        return cost;
     }
 }

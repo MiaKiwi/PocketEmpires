@@ -12,10 +12,13 @@ and this project adheres to [STVP](https://mia.kiwi/projects/stvp).
 - `world` property to Cells to keep track of global attributes of the world
 - Debug cell types
 - Neighbor getters for cells
+- Empires and colonization
+- Traversal cost for Cells
 
 ### Changed
 
 - Cells now reference their empire directly instead of through its ID
+- Cells are automatically added to the world when created
 
 ## [25.0.0] - 2025-10-04
 

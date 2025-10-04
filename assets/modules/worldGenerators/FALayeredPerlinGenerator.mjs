@@ -27,7 +27,6 @@ export class FALayeredPerlinGenerator extends Generator {
         noise.seed(seed);
 
         let world = new World([]);
-        let cells = [];
 
         for (let x = 0; x < width; x++) {
             for (let y = 0; y < height; y++) {
@@ -59,11 +58,9 @@ export class FALayeredPerlinGenerator extends Generator {
                     type = CellType.MOUNTAIN
                 }
 
-                cells.push(new Cell(x, y, type, world));
+                new Cell(x, y, type, world);
             }
         }
-
-        world.cells = cells;
 
         return world;
     }
